@@ -1,7 +1,10 @@
 package view;
 
-import javax.swing.*;
-import java.awt.*;
+import controller.Controller3d;
+
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
 
 public class PGRFWindow extends JFrame {
 
@@ -10,20 +13,18 @@ public class PGRFWindow extends JFrame {
     public PGRFWindow() {
         // bez tohoto nastavení se okno zavře, ale aplikace stále běží na pozadí
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("PGRF1 cvičení"); // titulek okna
+        setTitle("PGRF1 úloha č. 3"); // titulek okna
 
         raster = new Raster();
         raster.setFocusable(true);
         raster.grabFocus(); // důležité pro pozdější ovládání z klávesnice
 
-        FlowLayout layout = new FlowLayout();
-        layout.setVgap(0);
-        layout.setHgap(0);
+        BorderLayout layout = new BorderLayout(5, 5);
 
         setLayout(layout);
-        add(raster); // vložit plátno do okna
+        add(raster,BorderLayout.CENTER); // vložit plátno do okna
         pack();
-
+        new Controller3d(raster);
         setLocationRelativeTo(null); // vycentrovat okno
     }
 

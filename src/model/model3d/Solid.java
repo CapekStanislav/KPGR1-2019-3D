@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instance třídy {@code Solid}
+ * Abstraktní třída {@code Solid} představuje vzor pro geometrické objekty,
+ * které lze vykreslovat.
  *
  * @author Stanislav Čapek
  */
@@ -17,17 +18,18 @@ public abstract class Solid implements Drawable {
     //== KONSTANTNÍ ATRIBUTY TŘÍDY =================================================
     //== PROMĚNNÉ ATRIBUTY TŘÍDY ===================================================
     //== STATICKÝ INICIALIZAČNÍ BLOK - STATICKÝ KONSTRUKTOR ========================
-    //== KONSTANTNÍ ATRIBUTY INSTANCÍ =========
-    // =====================================
+    //== KONSTANTNÍ ATRIBUTY INSTANCÍ ==============================================
+
     /**
-     * Vertex buffer
+     * Vertex buffer - body ze kterých je objekt skládán
      */
     final List<Point3D> verticies = new ArrayList<>();
 
     /**
-     * Index buffer
+     * Index buffer - odkazy na pozice bodů
      */
     final List<Integer> indices = new ArrayList<>();
+
     //== PROMĚNNÉ ATRIBUTY INSTANCÍ ================================================
 
     /**
@@ -36,7 +38,7 @@ public abstract class Solid implements Drawable {
     Color color;
 
     /**
-     * Střed
+     * Střed objektu
      */
     Point3D center;
 
@@ -70,13 +72,19 @@ public abstract class Solid implements Drawable {
     }
 
     //== OSTATNÍ NESOUKROMÉ METODY INSTANCÍ ========================================
+
+    /**
+     * Přidá odkazy na jednotlivé vrcholy
+     *
+     * @param toAdd indície (ukazatele) na body tělesa
+     */
     protected final void addIndicies(Integer... toAdd) {
         indices.addAll(List.of(toAdd));
     }
 
     @Override
     public String toString() {
-        return this.getClass().toString() + this.verticies.toString();
+        return this.getClass().getName() + this.verticies.toString();
     }
 
     //== SOUKROMÉ A POMOCNÉ METODY TŘÍDY ===========================================

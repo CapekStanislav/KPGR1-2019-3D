@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Instance třídy {@code Transformer}
+ * Instance třídy {@code Transformer} představují služebníka pro objekty
+ * instance rozhraní {@link Transformable} na kterých dokáže provést základní
+ * transformace.s
  *
  * @author Stanislav Čapek
  */
@@ -29,7 +31,7 @@ public class Transformer {
     //== OSTATNÍ NESOUKROMÉ METODY INSTANCÍ ========================================
 
     /**
-     * Pohne s objektem podel os {@code X},{@code Y} a {@code Z}
+     * Pohne s objektem přírůstkem podél os {@code X},{@code Y} a {@code Z}
      *
      * @param transformable transformovaný objekt
      * @param x             posun po ose x
@@ -64,10 +66,11 @@ public class Transformer {
         verticies.clear();
         verticies.addAll(newVerticies);
         transformable.setCenter(transformable.getCenter().mul(rot));
+        setupTransformableRotation(transformable, alpha, beta, gamma);
     }
 
     /**
-     * Rotace podél středu objektu
+     * Rotace podél středu objektu.
      *
      * @param transformable transformovaný objekt
      * @param alpha         rotace podél X, v radiánech
@@ -86,9 +89,18 @@ public class Transformer {
                 .collect(Collectors.toList());
         verticies.clear();
         verticies.addAll(collect);
+        setupTransformableRotation(transformable, alpha, beta, gamma);
     }
 
 
+    /**
+     * Škáluje objekt podle počátku souřadnic.
+     *
+     * @param transformable transformovaný objekt
+     * @param x             škálování podél X
+     * @param y             škálování podél Y
+     * @param z             škálování podél Z
+     */
     public void scale(Transformable transformable, double x, double y, double z) {
         final List<Point3D> verticies = transformable.getVerticies();
         Mat4Scale scale = new Mat4Scale(x, y, z);
@@ -99,10 +111,34 @@ public class Transformer {
 
         verticies.clear();
         verticies.addAll(collect);
+        setupTransformabelScale(transformable, scale);
     }
 
-    //== SOUKROMÉ A POMOCNÉ METODY TŘÍDY ===========================================
-    //== SOUKROMÉ A POMOCNÉ METODY INSTANCÍ ========================================
+
+    /**
+     * Škáluje objekt podle středu objektu.
+     *
+     * @param transformable transformovaný objekt
+     * @param x             škálování podle X
+     * @param y             škálování podle Y
+     * @param z             škálování podle Z
+     */
+    public void scaleByCenter(Transformable transformable, double x, double y, double z) {
+        final List<Point3D> verticies = transformable.getVerticies();
+        final Vec3D center = new Vec3D(transformable.getCenter());
+        final Mat4Scale scale = new Mat4Scale(x, y, z);
+        final Mat4 tranAndScale = new Mat4Identity()
+                .mul(new Mat4Transl(center.opposite()))
+                .mul(scale)
+                .mul(new Mat4Transl(center));
+        final List<Point3D> collect = verticies.stream()
+                .map(point3D -> point3D.mul(tranAndScale))
+                .collect(Collectors.toList());
+        verticies.clear();
+        verticies.addAll(collect);
+        setupTransformabelScale(transformable, scale);
+
+    }
 
     /**
      * Najde střed objektu
@@ -138,6 +174,40 @@ public class Transformer {
         );
 
         return center;
+    }
+
+    //== SOUKROMÉ A POMOCNÉ METODY TŘÍDY ===========================================
+    //== SOUKROMÉ A POMOCNÉ METODY INSTANCÍ ========================================
+
+    /**
+     * Naství nové hodnoty objektu po škálování
+     *
+     * @param transformable transformovaný objekt
+     * @param scale         matice škálování
+     */
+    private void setupTransformabelScale(Transformable transformable, Mat4 scale) {
+        Point3D scaling = new Point3D(
+                transformable.getScaleX(),
+                transformable.getScaleY(),
+                transformable.getScaleZ())
+                .mul(scale);
+        transformable.setScaleX(scaling.getX());
+        transformable.setScaleY(scaling.getY());
+        transformable.setScaleZ(scaling.getZ());
+    }
+
+    /**
+     * Nastaví nové hodnoty objektu po provedení rotace
+     *
+     * @param transformable transformovaný objekt
+     * @param alpha         rotace podle X
+     * @param beta          rotace podle Y
+     * @param gamma         rotace podle Z
+     */
+    private void setupTransformableRotation(Transformable transformable, double alpha, double beta, double gamma) {
+        transformable.setRotationX(transformable.getRotationX() + alpha);
+        transformable.setRotationY(transformable.getRotationY() + beta);
+        transformable.setRotationZ(transformable.getRotationZ() + gamma);
     }
     //== INTERNÍ DATOVÉ TYPY =======================================================
     //== TESTY A METODA MAIN =======================================================

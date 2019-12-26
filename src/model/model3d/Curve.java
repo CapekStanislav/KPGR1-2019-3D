@@ -1,31 +1,27 @@
 package model.model3d;
 
 import model.Transformable;
+import transforms.Cubic;
 import transforms.Point3D;
 
-import java.awt.Color;
-
 /**
- * Instance třídy {@code Line} představuje jednoduchou linku.
+ * Abstraktní třída {@code Curve} představuje vzor pro všechny křivky.
  *
  * @author Stanislav Čapek
  */
-public class Line extends Solid implements Transformable {
+public abstract class Curve extends Solid implements Transformable {
 
     //== KONSTANTNÍ ATRIBUTY TŘÍDY =================================================
-    private static final String DEFAULT_NAME = "Line";
+    private static final double DEFAULT_LEVEL_OF_DETAIL = 0.1;
     //== PROMĚNNÉ ATRIBUTY TŘÍDY ===================================================
-    private static int id = 1;
+    private static double levelOfDetail = DEFAULT_LEVEL_OF_DETAIL;
     //== STATICKÝ INICIALIZAČNÍ BLOK - STATICKÝ KONSTRUKTOR ========================
     //== KONSTANTNÍ ATRIBUTY INSTANCÍ ==============================================
-
-    private final String name = DEFAULT_NAME + "_" + id++;
-
     //== PROMĚNNÉ ATRIBUTY INSTANCÍ ================================================
-
     private double scaleX = 1;
     private double scaleY = 1;
     private double scaleZ = 1;
+
     private double rotationX = 0;
     private double rotationY = 0;
     private double rotationZ = 0;
@@ -35,32 +31,77 @@ public class Line extends Solid implements Transformable {
 
     //== KONSTRUKTORY A TOVÁRNÍ METODY =============================================
 
-    public Line(Point3D start, Point3D end) {
-        this(start, end, Color.BLACK);
+    //== ABSTRAKTNÍ METODY =========================================================
+    //== PŘÍSTUPOVÉ METODY VLASTNOSTÍ INSTANCÍ =====================================
+    //== OSTATNÍ NESOUKROMÉ METODY INSTANCÍ ========================================
+
+    /**
+     * Inicializuje křivku s využitím kubiky {@link Cubic}.
+     *
+     * @param cubic         kubika
+     * @param levelOfDetail detail křivky určuje kolik bodů se vytvoří, rozmezí 0 - 1
+     */
+    protected final void initCurve(Cubic cubic, double levelOfDetail) {
+        for (double i = 0; i <= 1; i += levelOfDetail) {
+            final Point3D point3D = cubic.compute(i);
+            verticies.add(point3D);
+        }
+        for (int i = verticies.size() - 2; i >= 0; i--) {
+            addIndicies(i, i + 1);
+        }
     }
 
-    public Line(Point3D start, Point3D end, Color color) {
-        this.color = color;
-        verticies.add(start);
-        verticies.add(end);
-
-        addIndicies(0, 1);
-
-        this.center = start;
+    /**
+     * Nastaví střed dle počátečního a konečného bodu křivky.
+     *
+     * @param a počáteční bod
+     * @param b konečný bod
+     */
+    protected final void setupCenter(Point3D a, Point3D b) {
+        double x = (b.getX() - Math.abs(a.getX())) / 2;
+        double y = (b.getY() - Math.abs(a.getY())) / 2;
+        double z = (b.getZ() - Math.abs(a.getZ())) / 2;
+        setCenter(new Point3D(x, y, z));
     }
-
 
     //== ABSTRAKTNÍ METODY =========================================================
     //== PŘÍSTUPOVÉ METODY VLASTNOSTÍ INSTANCÍ =====================================
 
+    /**
+     * Vrátí detail křivky, rozmezí je {@code (0,1>}, přičemž čím blíže k
+     * nule jsme tím detailnější je křivka.
+     *
+     * @return detail křivky
+     */
+    public static double getLevelOfDetail() {
+        return levelOfDetail;
+    }
+
+
+    /**
+     * Nastaví nový detail křivky. Rozmezí musí být {@code (0,1>}, jinak
+     * vyjímka. Čím blíže k nule, tím detalnější bude křivka.
+     *
+     * @param levelOfDetail detail křivky v rozmezí (0,1>
+     * @throws IllegalArgumentException hodnota je mimo rozmezí
+     */
+    public static void setLevelOfDetail(double levelOfDetail) throws IllegalArgumentException {
+        if (levelOfDetail <= 0 || levelOfDetail > 1) {
+            throw new IllegalArgumentException(
+                    "Rozmezí musí být větší jak nula a zároveň menší nebo rovno 1: " + levelOfDetail
+            );
+        }
+        Curve.levelOfDetail = levelOfDetail;
+    }
+
     @Override
     public Point3D getCenter() {
-        return center;
+        return this.center;
     }
 
     @Override
     public void setCenter(Point3D point) {
-        center = point;
+        this.center = point;
     }
 
     @Override
@@ -122,14 +163,6 @@ public class Line extends Solid implements Transformable {
     public void setRotationZ(double radians) {
         this.rotationZ = radians;
     }
-
-    //== OSTATNÍ NESOUKROMÉ METODY INSTANCÍ ========================================
-
-    @Override
-    public String toString() {
-        return name;
-    }
-
     //== SOUKROMÉ A POMOCNÉ METODY TŘÍDY ===========================================
     //== SOUKROMÉ A POMOCNÉ METODY INSTANCÍ ========================================
 
