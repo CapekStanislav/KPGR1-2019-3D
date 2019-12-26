@@ -216,7 +216,7 @@ public class Controller3d {
                         JOptionPane.showMessageDialog(
                                 null,
                                 new InfoPanel(),
-                                "Ovládání",
+                                "Controls",
                                 JOptionPane.PLAIN_MESSAGE
                         );
                         break;
@@ -857,11 +857,6 @@ public class Controller3d {
             this.isScale = animation.isScale;
 
             this.speed = animation.speed;
-
-//            this.scaleXOrigin = animation.scaleXOrigin;
-//            this.scaleYOrigin = animation.scaleYOrigin;
-//            this.scaleZOrigin = animation.scaleZOrigin;
-
         }
 
         /**
@@ -907,7 +902,6 @@ public class Controller3d {
          * @param animation nová animace
          */
         void addAnimation(Animation animation) {
-//            animations.add(animation);
             animationDeque.add(animation);
         }
 
@@ -917,7 +911,6 @@ public class Controller3d {
          * @param animation animace k vymazání
          */
         void removeAnimation(Animation animation) {
-//            animations.remove(animation);
             animationDeque.remove(animation);
         }
 

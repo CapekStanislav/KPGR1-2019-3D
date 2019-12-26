@@ -15,7 +15,7 @@ public class TransformationPanel extends JPanel {
     private final Map<String, JSlider> scaleSliders = new HashMap<>();
     private final Map<String, JSpinner> moveJspinner = new HashMap<>();
     private final ButtonGroup buttonGroup;
-    private final String[] axis = new String[]{"X", "Y", "Z"};
+    private final String[] axis = {"X", "Y", "Z"};
 
     //== KONSTANTNÍ ATRIBUTY TŘÍDY =================================================
     //== PROMĚNNÉ ATRIBUTY TŘÍDY ===================================================

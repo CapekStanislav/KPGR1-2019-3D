@@ -42,7 +42,7 @@ public class CoonsCurve extends Curve {
     }
 
     /**
-     * Vytvoří křivku COOS pro více kontrolních bodů
+     * Vytvoří křivku COONS pro více kontrolních bodů
      *
      * @param points kontrolní body
      * @throws IllegalArgumentException počet kontrolních bodů je menší jak 4
