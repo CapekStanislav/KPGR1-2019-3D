@@ -196,7 +196,7 @@ public class Controller3d {
                         break;
                     case KeyEvent.VK_C:
                         if (!toggleProjection) {
-                            projections = new Mat4OrthoRH(10, 10, 0.1, 100);
+                            projections = new Mat4OrthoRH(8, 60, 0.1, 100);
                             toggleProjection = true;
                         } else {
                             projections = defaultProjetions;
@@ -257,7 +257,7 @@ public class Controller3d {
 
                 double azimut = Math.toDegrees(camera.getAzimuth());
                 azimut += dx / speed;
-                azimut = azimut % 360;
+//                azimut = azimut % 360;
 
                 camera = camera.withZenith(Math.toRadians(zenith)).withAzimuth(Math.toRadians(azimut));
                 lastX = e.getX();

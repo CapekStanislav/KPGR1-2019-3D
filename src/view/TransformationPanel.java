@@ -72,7 +72,6 @@ public class TransformationPanel extends JPanel {
     //== ABSTRAKTNÍ METODY =========================================================
     //== PŘÍSTUPOVÉ METODY VLASTNOSTÍ INSTANCÍ =====================================
 
-
     public Map<String, JSlider> getRotationSliders() {
         return rotationSliders;
     }

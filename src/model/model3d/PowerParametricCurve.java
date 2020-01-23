@@ -3,6 +3,7 @@ package model.model3d;
 import transforms.Point3D;
 
 import java.awt.Color;
+import java.util.function.Function;
 
 /**
  * Instance třídy {@code PowerParametricCurve} představují parametrické křivky
@@ -53,6 +54,14 @@ public class PowerParametricCurve extends Curve {
         this.center = new Point3D();
     }
 
+    private static void testFunctionInterface(double min, double max, Function<Double, Double> function) {
+        for (double i = min; i <= max; i++) {
+            System.out.println("function.apply(i) = " + function.apply(i));
+        }
+
+    }
+
+
     //== ABSTRAKTNÍ METODY =========================================================
     //== PŘÍSTUPOVÉ METODY VLASTNOSTÍ INSTANCÍ =====================================
     //== OSTATNÍ NESOUKROMÉ METODY INSTANCÍ ========================================
@@ -73,5 +82,7 @@ public class PowerParametricCurve extends Curve {
 
     //== INTERNÍ DATOVÉ TYPY =======================================================
     //== TESTY A METODA MAIN =======================================================
-
+    public static void main(String[] args) {
+        PowerParametricCurve.testFunctionInterface(0d, 10d, d -> Math.pow(d, 2));
+    }
 }

@@ -114,7 +114,7 @@ public class Renderer3d implements GpuRenderer {
         final Optional<Vec3D> dehomoB = b.dehomog();
 
 //        kontrola
-        if (!dehomoA.isPresent() || !dehomoB.isPresent()) {
+        if (dehomoA.isEmpty() || dehomoB.isEmpty()) {
             return;
         }
 
